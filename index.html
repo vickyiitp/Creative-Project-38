@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="theme-color" content="#050505" />
+    <link rel="canonical" href="https://vickyiitp.tech/enigma" />
+    
+    <!-- SEO & Metadata -->
+    <title>Enigma Machine - Cryptography Puzzle Game | Vickyiitp</title>
+    <meta name="description" content="Play Enigma Machine, an immersive WWII spy puzzle game by Vicky Kumar. Crack ciphers, master rotors, and use frequency analysis to decode secret messages." />
+    <meta name="keywords" content="Vicky Kumar, vickyiitp, AI developer, IIT Patna, 100 games, web apps, devil labs, Enigma Machine, Cryptography, Browser Game, Puzzle, React Game" />
+    <meta name="author" content="Vicky Kumar" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://vickyiitp.tech/enigma" />
+    <meta property="og:title" content="Enigma Machine - Cryptography Puzzle Game | Vickyiitp" />
+    <meta property="og:description" content="Crack the code. Save the world. An immersive browser-based cipher game by Vicky Kumar." />
+    <meta property="og:image" content="https://vickyiitp.tech/assets/enigma-preview.jpg" />
+    <meta property="og:site_name" content="Vickyiitp 100 Games" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://vickyiitp.tech/enigma" />
+    <meta name="twitter:title" content="Enigma Machine - Cryptography Puzzle Game | Vickyiitp" />
+    <meta name="twitter:description" content="Crack the code. Save the world. An immersive browser-based cipher game by Vicky Kumar." />
+    <meta name="twitter:image" content="https://vickyiitp.tech/assets/enigma-preview.jpg" />
+    <meta name="twitter:creator" content="@vickyiitp" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&family=Special+Elite&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+      
+      body {
+        background-color: #050505;
+        font-family: 'Share Tech Mono', monospace;
+        overflow-x: hidden;
+      }
+      
+      /* Smooth scrolling */
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* CRT Scanline Effect */
+      .crt-overlay {
+        background: linear-gradient(
+          rgba(18, 16, 16, 0) 50%, 
+          rgba(0, 0, 0, 0.25) 50%
+        ), 
+        linear-gradient(
+          90deg, 
+          rgba(255, 0, 0, 0.06), 
+          rgba(0, 255, 0, 0.02), 
+          rgba(0, 0, 255, 0.06)
+        );
+        background-size: 100% 3px, 3px 100%;
+        pointer-events: none;
+        animation: flicker 0.15s infinite;
+      }
+
+      .scanline {
+        width: 100%;
+        height: 100px;
+        z-index: 60;
+        background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(34, 197, 94, 0.1) 50%, rgba(0,0,0,0) 100%);
+        opacity: 0.1;
+        position: absolute;
+        bottom: 100%;
+        animation: scanline 10s linear infinite;
+        pointer-events: none;
+      }
+
+      @keyframes scanline {
+        0% { bottom: 100%; }
+        100% { bottom: -100px; }
+      }
+
+      @keyframes flicker {
+        0% { opacity: 0.97; }
+        5% { opacity: 0.95; }
+        10% { opacity: 0.9; }
+        15% { opacity: 0.95; }
+        20% { opacity: 0.99; }
+        50% { opacity: 0.95; }
+        80% { opacity: 0.9; }
+        100% { opacity: 0.97; }
+      }
+
+      /* Glitch Effect Classes */
+      .glitch {
+        position: relative;
+      }
+      .glitch::before,
+      .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #050505;
+      }
+      .glitch::before {
+        left: 2px;
+        text-shadow: -1px 0 #ef4444;
+        clip: rect(44px, 450px, 56px, 0);
+        animation: glitch-anim-1 5s infinite linear alternate-reverse;
+      }
+      .glitch::after {
+        left: -2px;
+        text-shadow: -1px 0 #22c55e;
+        clip: rect(44px, 450px, 56px, 0);
+        animation: glitch-anim-2 5s infinite linear alternate-reverse;
+      }
+
+      @keyframes glitch-anim-1 {
+        0% { clip: rect(20px, 9999px, 81px, 0); }
+        20% { clip: rect(66px, 9999px, 14px, 0); }
+        40% { clip: rect(8px, 9999px, 87px, 0); }
+        60% { clip: rect(56px, 9999px, 25px, 0); }
+        80% { clip: rect(13px, 9999px, 9px, 0); }
+        100% { clip: rect(98px, 9999px, 62px, 0); }
+      }
+      @keyframes glitch-anim-2 {
+        0% { clip: rect(15px, 9999px, 95px, 0); }
+        20% { clip: rect(82px, 9999px, 3px, 0); }
+        40% { clip: rect(53px, 9999px, 34px, 0); }
+        60% { clip: rect(38px, 9999px, 56px, 0); }
+        80% { clip: rect(44px, 9999px, 7px, 0); }
+        100% { clip: rect(23px, 9999px, 88px, 0); }
+      }
+
+      .glass-panel {
+        background: rgba(20, 20, 20, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      }
+      
+      .text-glow {
+        text-shadow: 0 0 10px rgba(74, 222, 128, 0.5), 0 0 20px rgba(74, 222, 128, 0.3);
+      }
+      
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #000;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #22c55e;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #16a34a;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "recharts": "https://aistudiocdn.com/recharts@^3.5.0"
+  }
+}
+</script>
+<!-- JSON-LD Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "name": "Vicky Kumar",
+      "url": "https://vickyiitp.tech",
+      "sameAs": [
+        "https://linkedin.com/in/vickyiitp",
+        "https://github.com/vickyiitp",
+        "https://x.com/vickyiitp",
+        "https://instagram.com/vickyiitp",
+        "https://youtube.com/@vickyiitp"
+      ],
+      "jobTitle": "AI Developer",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "IIT Patna"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "name": "Enigma Machine Game",
+      "url": "https://vickyiitp.tech/enigma",
+      "author": {
+        "@type": "Person",
+        "name": "Vicky Kumar"
+      },
+      "description": "Browser-based Enigma Machine simulator and puzzle game.",
+      "genre": "Puzzle Game, Cryptography"
+    }
+  ]
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

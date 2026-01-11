@@ -1,0 +1,5 @@
+{
+  "name": "Enigma Machine: Cipher Breaker",
+  "description": "A WWII-themed cryptographic puzzle game where players intercept scrambled messages and use a simulated 3-rotor Enigma machine to decrypt them using frequency analysis and logic.",
+  "requestFramePermissions": []
+}
